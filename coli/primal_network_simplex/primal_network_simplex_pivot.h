@@ -1,9 +1,18 @@
+// Copyright (C) 2019-2020 Florian Krellner
+//
+// Permission to use, modify and distribute this software is granted
+// provided that this copyright notice appears in all copies. For
+// precise terms see the accompanying LICENSE file.
+//
+// This software is provided "AS IS" with no warranty of any kind,
+// express or implied, and with no claim as to its suitability for any
+// purpose.
+
 #pragma once
 
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
 #include "primal_network_simplex_block_search.h"
-#include "primal_network_simplex_advanced_block_search.h"
 #include "primal_network_simplex_leaving_edge.h"
 
 #include <vector>
@@ -11,9 +20,9 @@
 using namespace std;
 
 // Pivot
-//  performes the pivot step, the actuall algorithmic step of the network simplex algorithm, that is:
+//  performes the pivot step, that is:
 //  1. find entering edge,
-//  2. find leaving edge abd the first comman predecessor of the two verices of the entering edge (called apex)
+//  2. find leaving edge and the first comman predecessor of the two verices of the entering edge (called apex)
 template <typename I,
           typename V,
           typename Logger,
@@ -49,7 +58,9 @@ void pivot(
     // 1. find entering edge
     blockSearch<I, V, Logger>(
         block_size, nEdges, costs, potentials, source, target, state, entering_edge, start_edge, logger);
-    if (entering_edge == nEdges) // no edge was found, terminate
+    
+    // if no edge was found, terminate
+    if (entering_edge == nEdges) 
         return;
 
     // 2. find leaving edge
@@ -57,7 +68,6 @@ void pivot(
     if (state[entering_edge] == UPPER)                      // if at upper bound the flow must be reduced, flow from target to source
         swap(v, w);
     delta = capacity[entering_edge];
-
     findLeavingEdge<I, V, Logger>(
         v, w, capacity, flow, predecessor, parent, number_successors, direction_predecessor, change,
         delta, apex, leaving_edge, length, in_v, in_w, out_v, logger);

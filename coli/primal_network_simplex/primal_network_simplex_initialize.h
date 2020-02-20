@@ -1,3 +1,13 @@
+// Copyright (C) 2019-2020 Florian Krellner
+//
+// Permission to use, modify and distribute this software is granted
+// provided that this copyright notice appears in all copies. For
+// precise terms see the accompanying LICENSE file.
+//
+// This software is provided "AS IS" with no warranty of any kind,
+// express or implied, and with no claim as to its suitability for any
+// purpose.
+
 #pragma once
 
 #include "primal_network_simplex_lib.h"
@@ -47,22 +57,11 @@ inline void initialize(
     direction_predecessor.reserve(nEdges + nVertices);
 
     V sum_costs = accumulate(costs.begin(), costs.end(),V(1));
-
-    // V sum_costs = V(0.9*numeric_limits<int>::max());
-
     I root = nVertices;
 
     for (I u = 0; u < root; ++u)
     {
-        if (supply[u] >= 0)
-        {
-            direction_predecessor[u] = UP;
-            source.push_back(u);
-            target.push_back(root);
-            flow.push_back(supply[u]);
-            costs.push_back(0);
-        }
-        else
+        if (supply[u] < 0)
         {
             direction_predecessor[u] = DOWN;
             source.push_back(root);
@@ -71,10 +70,17 @@ inline void initialize(
             costs.push_back(sum_costs);
             potentials[u] = sum_costs;
         }
+        else
+        {
+            direction_predecessor[u] = UP;
+            source.push_back(u);
+            target.push_back(root);
+            flow.push_back(supply[u]);
+            costs.push_back(0);
+        }
     }
 
     state.resize(nEdges + nVertices, TREE);
-    // capacity.resize(nEdges + nVertices, numeric_limits<V>::max());
     capacity.resize(nEdges + nVertices, numeric_limits<V>::max());
 
     // initialize tree structure for root (vertex with index nVertices)
