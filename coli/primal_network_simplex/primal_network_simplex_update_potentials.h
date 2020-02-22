@@ -10,10 +10,10 @@
 
 #pragma once
 
+#include <vector>
+
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
-
-#include <vector>
 
 using namespace std;
 
@@ -23,15 +23,16 @@ using namespace std;
 //
 template <typename I,
           typename V>
-inline void updatePotentials(
-    const I last_successor_in_v,      //
-    const I in_v,                     //
-    const I in_w,                     //
-    const V oriented_costs,           // costs of entering edge multiplied by -1 if edge is pointing downwards
-    const I number_successors,        //
-    const vector<I> &thread,          //
-    const vector<I> &reversed_thread, //
-    vector<V> &potentials             //
+inline void updatePotentials(     //
+    const I last_successor_in_v,  //
+    const I in_v,                 //
+    const I in_w,                 //
+    const V
+        oriented_costs,  // costs of entering edge multiplied by -1 if edge is pointing downwards
+    const I number_successors,         //
+    const vector<I> &thread,           //
+    const vector<I> &reversed_thread,  //
+    vector<V> &potentials              //
 )
 {
     V reduced_costs = potentials[in_w] - potentials[in_v] - oriented_costs;
@@ -49,8 +50,7 @@ inline void updatePotentials(
             v = reversed_thread[v];
             ctr++;
         }
-        if (number_successors % 2)
-            potentials[v] += reduced_costs;
+        if (number_successors % 2) potentials[v] += reduced_costs;
     }
     else
     {
@@ -68,29 +68,28 @@ inline void updatePotentials(
             v = reversed_thread[v];
             ctr++;
         }
-        if (nCtr % 2)
-            potentials[v] -= reduced_costs;
+        if (nCtr % 2) potentials[v] -= reduced_costs;
     }
 }
 
-template <typename I,
-          typename V,
+template <typename I, typename V,
           typename Logger>
-inline void updatePotentials(
-    const I last_successor_in_v,      //
-    const I in_v,                     //
-    const I in_w,                     //
-    const V oriented_costs,           // costs of entering edge multiplied by -1 if edge is pointing downwards
-    const I number_successors,        //
-    const vector<I> &thread,          //
-    const vector<I> &reversed_thread, //
-    vector<V> &potentials,            //
-    Logger &logger                    //
+inline void updatePotentials(     //
+    const I last_successor_in_v,  //
+    const I in_v,                 //
+    const I in_w,                 //
+    const V
+        oriented_costs,  // costs of entering edge multiplied by -1 if edge is pointing downwards
+    const I number_successors,         //
+    const vector<I> &thread,           //
+    const vector<I> &reversed_thread,  //
+    vector<V> &potentials,             //
+    Logger &logger                     //
 )
 {
     logger.start();
-    updatePotentials<I, V>(
-        last_successor_in_v, in_v, in_w, oriented_costs, number_successors, thread, reversed_thread, potentials);
+    updatePotentials<I, V>(last_successor_in_v, in_v, in_w, oriented_costs, number_successors,
+                           thread, reversed_thread, potentials);
     logger.end();
     logger.increment_update_potentials();
 }

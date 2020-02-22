@@ -8,13 +8,12 @@
 // express or implied, and with no claim as to its suitability for any
 // purpose.
 
-
 #pragma once
+
+#include <vector>
 
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
-
-#include <vector>
 
 using namespace std;
 
@@ -24,12 +23,12 @@ using namespace std;
 //
 template <typename I,
           typename V>
-inline void updateState(
-    const I entering_idx,  //
-    const I leaving_idx,   //
-    const Change change,   //
-    const vector<V> &flow, //
-    vector<State> &state   //
+inline void updateState(    //
+    const I entering_idx,   //
+    const I leaving_idx,    //
+    const Change change,    //
+    const vector<V> &flow,  //
+    vector<State> &state    //
 )
 {
     if (change)
@@ -43,16 +42,15 @@ inline void updateState(
     }
 }
 
-template <typename I,
-          typename V,
+template <typename I, typename V,
           typename Logger>
-inline void updateState(
-    const I entering_idx,  //
-    const V leaving_idx,   //
-    const Change change,   //
-    const vector<V> &flow, //
-    vector<State> &state,  //
-    Logger &logger         //
+inline void updateState(    //
+    const I entering_idx,   //
+    const V leaving_idx,    //
+    const Change change,    //
+    const vector<V> &flow,  //
+    vector<State> &state,   //
+    Logger &logger          //
 )
 {
     logger.start();

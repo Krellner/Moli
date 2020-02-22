@@ -1,4 +1,4 @@
-// Copyright (C) 2003-2013 
+// Copyright (C) 2003-2013
 // Egervary Jeno Kombinatorikus Optimalizalasi Kutatocsoport
 // (Egervary Research Group on Combinatorial Optimization, EGRES).
 // Copyright (C) 2019-2020 Florian Krellner
@@ -13,11 +13,11 @@
 
 #pragma once
 
+#include <iostream>
+#include <vector>
+
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
-
-#include <vector>
-#include <iostream>
 
 using namespace std;
 
@@ -26,22 +26,22 @@ using namespace std;
 //
 //
 template <typename I>
-inline void updateTree(
-    const I apex,                            //
-    const I in_v,                            //
-    const I in_w,                            //
-    const I length,                          //
-    const I entering_idx,                    //
-    const I entering_v,                      //
-    const I entering_w,                      //
-    const I out_v,                           //
-    vector<I> &last_successor,               //
-    vector<I> &number_successors,            //
-    vector<I> &parent,                       //
-    vector<I> &predecessor,                  //
-    vector<I> &reversed_thread,              //
-    vector<I> &thread,                       //
-    vector<Direction> &direction_predecessor //
+inline void updateTree(                       //
+    const I apex,                             //
+    const I in_v,                             //
+    const I in_w,                             //
+    const I length,                           //
+    const I entering_idx,                     //
+    const I entering_v,                       //
+    const I entering_w,                       //
+    const I out_v,                            //
+    vector<I> &last_successor,                //
+    vector<I> &number_successors,             //
+    vector<I> &parent,                        //
+    vector<I> &predecessor,                   //
+    vector<I> &reversed_thread,               //
+    vector<I> &thread,                        //
+    vector<Direction> &direction_predecessor  //
 )
 {
     const I nVertices = predecessor.size();
@@ -79,7 +79,8 @@ inline void updateTree(
         // ----------------------------------------------------------------------------------------------
 
         // handle the case old_reversed_thread == in_w, (i.e. apex == out_w)
-        I thread_continue = (old_reversed_thread == in_w) ? thread[old_last_successor] : thread[in_w];
+        I thread_continue =
+            (old_reversed_thread == in_w) ? thread[old_last_successor] : thread[in_w];
 
         // remember vertices to update missing reversed_thread links between unchanged tree parts
         // between in_v and out_v (link between missing_links[2*i] and missing_links[2*i+1])
@@ -91,9 +92,9 @@ inline void updateTree(
         I before, after = thread[last];
         I last_successor_v = last_successor[v], last_successor_parent_v;
 
-        // update parents, thread and reversed_thread (where possible) by reversing the parent-relation 
-        // of the vertices from in_v to out_v in the current basis-tree (the one that is modified) and
-        // modifing thread and reversed_thread accordingly
+        // update parents, thread and reversed_thread (where possible) by reversing the
+        // parent-relation of the vertices from in_v to out_v in the current basis-tree (the one
+        // that is modified) and modifing thread and reversed_thread accordingly
         thread[in_w] = in_v;
         while (v != out_v)
         {
@@ -104,19 +105,18 @@ inline void updateTree(
             // reversed thread cannot be updated yet
             thread[last] = next_v;
             missing_link.push_back(next_v);
-            missing_link.push_back(last);    
-            
+            missing_link.push_back(last);
+
             // reconnect the subtree (the subtree after and before the subtree of v)
             before = reversed_thread[v];
-            thread[before] = after; // thread[last]
+            thread[before] = after;  // thread[last]
             reversed_thread[after] = before;
 
             last_successor_parent_v = last_successor_v;
             last_successor_v = last_successor[next_v];
 
-            last = (last_successor_v == last_successor_parent_v)
-                       ? before // = reversed_thread[v]
-                       : last_successor_v;
+            last = (last_successor_v == last_successor_parent_v) ? before  // = reversed_thread[v]
+                                                                 : last_successor_v;
 
             after = thread[last];
 
@@ -174,15 +174,13 @@ inline void updateTree(
     // update last_successors from out_w to the root
     if (apex != old_reversed_thread && in_w != old_reversed_thread)
     {
-        for (I u = out_w;
-             u != up_limit_out && last_successor[u] == old_last_successor;
+        for (I u = out_w; u != up_limit_out && last_successor[u] == old_last_successor;
              u = parent[u])
             last_successor[u] = old_reversed_thread;
     }
     else if (last_successor_out != old_last_successor)
     {
-        for (I u = out_w;
-             u != up_limit_out && last_successor[u] == old_last_successor;
+        for (I u = out_w; u != up_limit_out && last_successor[u] == old_last_successor;
              u = parent[u])
             last_successor[u] = last_successor_out;
     }
@@ -192,12 +190,10 @@ inline void updateTree(
     // ----------------------------------------------------------------------------------------------
 
     // update number_successor form in_w to apex
-    for (I u = in_w; u != apex; u = parent[u])
-        number_successors[u] += old_number_successors;
+    for (I u = in_w; u != apex; u = parent[u]) number_successors[u] += old_number_successors;
 
     // update number_successor form out_w to apex
-    for (I u = out_w; u != apex; u = parent[u])
-        number_successors[u] -= old_number_successors;
+    for (I u = out_w; u != apex; u = parent[u]) number_successors[u] -= old_number_successors;
 }
 
 //
@@ -205,29 +201,29 @@ inline void updateTree(
 //
 //
 template <typename I, typename Logger>
-inline void updateTree(
-    const I apex,                             //
-    const I in_v,                             //
-    const I in_w,                             //
-    const I length,                           //
-    const I entering_idx,                     //
-    const I entering_v,                       //
-    const I entering_w,                       //
-    const I out_v,                            //
-    vector<I> &last_successor,                //
-    vector<I> &number_successors,             //
-    vector<I> &parent,                        //
-    vector<I> &predecessor,                   //
-    vector<I> &reversed_thread,               //
-    vector<I> &thread,                        //
-    vector<Direction> &direction_predecessor, //
-    Logger &logger                            //
+inline void updateTree(                        //
+    const I apex,                              //
+    const I in_v,                              //
+    const I in_w,                              //
+    const I length,                            //
+    const I entering_idx,                      //
+    const I entering_v,                        //
+    const I entering_w,                        //
+    const I out_v,                             //
+    vector<I> &last_successor,                 //
+    vector<I> &number_successors,              //
+    vector<I> &parent,                         //
+    vector<I> &predecessor,                    //
+    vector<I> &reversed_thread,                //
+    vector<I> &thread,                         //
+    vector<Direction> &direction_predecessor,  //
+    Logger &logger                             //
 )
 {
     logger.start();
-    updateTree<I>(
-        apex, in_v, in_w, length, entering_idx, entering_v, entering_w, out_v, last_successor,
-        number_successors, parent, predecessor, reversed_thread, thread, direction_predecessor);
+    updateTree<I>(apex, in_v, in_w, length, entering_idx, entering_v, entering_w, out_v,
+                  last_successor, number_successors, parent, predecessor, reversed_thread, thread,
+                  direction_predecessor);
     logger.end();
     logger.increment_update_tree();
 }

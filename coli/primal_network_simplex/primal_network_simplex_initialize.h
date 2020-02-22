@@ -10,11 +10,11 @@
 
 #pragma once
 
+#include <numeric>
+#include <vector>
+
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
-
-#include <vector>
-#include <numeric> 
 
 using namespace std;
 
@@ -24,24 +24,24 @@ using namespace std;
 //
 template <typename I,
           typename V>
-inline void initialize(
-    const I nEdges,                           // number of edges in the original graph
-    const I nVertices,                        // number of vertices in the original graph
-    vector<V> &capacity,                      //
-    vector<V> &flow,                          //
-    vector<V> &supply,                        //
-    vector<V> &costs,                         //
-    vector<V> &potentials,                    //
-    vector<I> &number_successors,             //
-    vector<I> &last_successor,                //
-    vector<I> &parent,                        //
-    vector<I> &predecessor,                   //
-    vector<I> &source,                        //
-    vector<I> &target,                        //
-    vector<I> &thread,                        //
-    vector<I> &reversed_thread,               //
-    vector<Direction> &direction_predecessor, //
-    vector<State> &state                      //
+inline void initialize(                        //
+    const I nEdges,                            //
+    const I nVertices,                         //
+    vector<V> &capacity,                       //
+    vector<V> &flow,                           //
+    vector<V> &supply,                         //
+    vector<V> &costs,                          //
+    vector<V> &potentials,                     //
+    vector<I> &number_successors,              //
+    vector<I> &last_successor,                 //
+    vector<I> &parent,                         //
+    vector<I> &predecessor,                    //
+    vector<I> &source,                         //
+    vector<I> &target,                         //
+    vector<I> &thread,                         //
+    vector<I> &reversed_thread,                //
+    vector<Direction> &direction_predecessor,  //
+    vector<State> &state                       //
 )
 {
     iota(last_successor.begin(), last_successor.end(), I(0));
@@ -56,7 +56,7 @@ inline void initialize(
     costs.reserve(nEdges + nVertices);
     direction_predecessor.reserve(nEdges + nVertices);
 
-    V sum_costs = accumulate(costs.begin(), costs.end(),V(1));
+    V sum_costs = accumulate(costs.begin(), costs.end(), V(1));
     I root = nVertices;
 
     for (I u = 0; u < root; ++u)
@@ -93,34 +93,33 @@ inline void initialize(
     reversed_thread[0] = root;
 }
 
-template <typename I,
-          typename V,
+template <typename I, typename V,
           typename Logger>
-inline void initialize(
-    const I nEdges,                           // number of edges in the original graph
-    const I nVertices,                        // number of vertices in the original graph
-    vector<V> &capacity,                      //
-    vector<V> &flow,                          //
-    vector<V> &supply,                        //
-    vector<V> &costs,                         //
-    vector<V> &potentials,                    //
-    vector<I> &number_successors,             //
-    vector<I> &last_successor,                //
-    vector<I> &parent,                        //
-    vector<I> &predecessor,                   //
-    vector<I> &source,                        //
-    vector<I> &target,                        //
-    vector<I> &thread,                        //
-    vector<I> &reversed_thread,               //
-    vector<Direction> &direction_predecessor, //
-    vector<State> &state,                     //
-    Logger &logger                            //
+inline void initialize(                        //
+    const I nEdges,                            //
+    const I nVertices,                         //
+    vector<V> &capacity,                       //
+    vector<V> &flow,                           //
+    vector<V> &supply,                         //
+    vector<V> &costs,                          //
+    vector<V> &potentials,                     //
+    vector<I> &number_successors,              //
+    vector<I> &last_successor,                 //
+    vector<I> &parent,                         //
+    vector<I> &predecessor,                    //
+    vector<I> &source,                         //
+    vector<I> &target,                         //
+    vector<I> &thread,                         //
+    vector<I> &reversed_thread,                //
+    vector<Direction> &direction_predecessor,  //
+    vector<State> &state,                      //
+    Logger &logger                             //
 )
 {
     logger.start();
-    initialize<I,V>(
-        nEdges, nVertices, capacity, flow, supply, costs, potentials, number_successors, last_successor,
-        parent, predecessor, source, target, thread, reversed_thread, direction_predecessor, state);
+    initialize<I, V>(nEdges, nVertices, capacity, flow, supply, costs, potentials,
+                     number_successors, last_successor, parent, predecessor, source, target, thread,
+                     reversed_thread, direction_predecessor, state);
     logger.end();
     logger.increment_initialize();
 }
