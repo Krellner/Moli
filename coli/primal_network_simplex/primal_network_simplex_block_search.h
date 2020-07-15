@@ -18,10 +18,6 @@
 
 using namespace std;
 
-//
-//
-//
-//
 template <typename I, typename V>
 inline void get_minimum_reduced_costs_in_block(  //
     const I begin,                               //
@@ -47,10 +43,6 @@ inline void get_minimum_reduced_costs_in_block(  //
     }
 }
 
-//
-//
-//
-//
 template <typename I,
           typename V>
 inline void blockSearch(          //
@@ -65,10 +57,18 @@ inline void blockSearch(          //
     I& start_edge                 //
 )
 {
+    // The block search pricing procedure cyclically computes the reduced costs blockwise and
+    // selects the edge with the most reduced costs among them at each iteration. If an edge with
+    // negitve reduced costs is found in a block it is selected and the pricing stops. The next
+    // round starts with the next block.
+    //
+    // The number of edges might not be devideable by the block size. So there will most likely be a
+    // block that contains the last and the first edge. We seperatly consider the blocks before the
+    // mentioned block, the mention block and the blocks after the mentioned block, in the stated
+    // order.
+
     V min = 0;
 
-    //
-    //
     I begin = start_edge;
     I end = start_edge + block_size;
     while (end <= nEdges)
@@ -84,8 +84,6 @@ inline void blockSearch(          //
         end += block_size;
     }
 
-    //
-    //
     I new_block_start = end - nEdges;
     get_minimum_reduced_costs_in_block<I, V>(begin, nEdges, costs, potentials, source, target,
                                              state, min, entering_edge);
@@ -97,8 +95,6 @@ inline void blockSearch(          //
         return;
     }
 
-    //
-    //
     begin = new_block_start;
     end = new_block_start + block_size;
     while (begin < start_edge)

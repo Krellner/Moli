@@ -21,15 +21,11 @@
 
 using namespace std;
 
-//
-//
-//
-//
 template <typename I, typename V,
           typename Logger>
 void update(                                   //
     const Change change,                       //
-    const V delta,                             // change ... TODO
+    const V delta,                             //
     const I apex,                              //
     const I entering_idx,                      //
     const I entering_v,                        //

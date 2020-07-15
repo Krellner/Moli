@@ -42,29 +42,32 @@ void primalNetworkSimplex(  //
     const I nVertices = supply.size();
     const I nEdges = target.size();
 
+    // Primal Network Simplex Algorithm runs on auxilliary graph. The auxilliary graph has one more
+    // vertex than the given graph. Any vertex is connect to this auxilliary vertex. Those edges
+    // have high costs, so they are not part of an optimal solution. On this auxilliary graph,
+    // finding an initial solution is trivial. See the initialization step for more details.
+
     supply.push_back(0);
+
     vector<V> potentials(nVertices + 1, 0);
-
-    // data structures for storing the spanning tree representation
-
-    vector<I> parent(nVertices + 1, nVertices);  // for each vertex the parent vertex
-    vector<I> predecessor(nVertices + 1,
-                          nEdges + nVertices);  // for each vertex the incoming tree edge
-    vector<I> thread(nVertices + 1);  // for each vertex ... (used for updating the potentials)
-    vector<I> reversed_thread(nVertices + 1, 0);    // for each vertex ... (only used for updating)
-    vector<I> number_successors(nVertices + 1, 1);  // for each vertex the number of successors
-    vector<I> last_successor(nVertices + 1);        // for each vertex its last successors
-    vector<Direction> direction_predecessor(
-        nVertices + 1);                  // for each vertex the orientation of its predecessor
-    vector<State> state(nEdges, LOWER);  // for each edge it status with in the spanning tree
+    vector<I> parent(nVertices + 1, nVertices);
+    vector<I> predecessor(nVertices + 1, nEdges + nVertices);
+    vector<I> thread(nVertices + 1);
+    vector<I> reversed_thread(nVertices + 1, 0);
+    vector<I> number_successors(nVertices + 1, 1);
+    vector<I> last_successor(nVertices + 1);
+    vector<Direction> direction_predecessor(nVertices + 1);
+    vector<State> state(nEdges, LOWER);
 
     initialize<I, V, Logger>(nEdges, nVertices, capacity, flow, supply, costs, potentials,
                              number_successors, last_successor, parent, predecessor, source, target,
                              thread, reversed_thread, direction_predecessor, state, logger);
 
+    // Block size for the pricing step, this is a good value found by experimenting.
     const I block_size = I(sqrt(I(nEdges)));
-
+    // Start_edge is the edge at which to start the pricing.
     I start_edge = 0;
+
     while (true)
     {
         Change change;

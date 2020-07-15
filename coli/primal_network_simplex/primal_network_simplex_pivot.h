@@ -19,11 +19,6 @@
 
 using namespace std;
 
-// Pivot
-//  performes the pivot step, that is:
-//  1. find entering edge,
-//  2. find leaving edge and the first common predecessor of the two vertices of the entering edge
-//  (called apex)
 template <typename I, typename V, typename Logger, PivotRule Rule>
 void pivot(                                           //
     const I block_size,                               //
@@ -52,18 +47,19 @@ void pivot(                                           //
     Logger &logger                                    //
 )
 {
-    // 1. find entering edge
+    // 1. Find entering edge (pricing).
+    // 2. Find leaving edge and the first common predecessor of the two vertices of the entering
+    //    edge (called apex).
+
     blockSearch<I, V, Logger>(block_size, nEdges, costs, potentials, source, target, state,
                               entering_edge, start_edge, logger);
 
-    // if no edge was found, terminate
     if (entering_edge == nEdges) return;
 
-    // 2. find leaving edge
-    I v = source[entering_edge], w = target[entering_edge];  // flow is pushed from first to second
-    // if at upper bound the flow must be reduced, flow from target to source
+    I v = source[entering_edge], w = target[entering_edge];
     if (state[entering_edge] == UPPER) swap(v, w);
     delta = capacity[entering_edge];
+
     findLeavingEdge<I, V, Logger>(v, w, capacity, flow, predecessor, parent, number_successors,
                                   direction_predecessor, change, delta, apex, leaving_edge, length,
                                   in_v, in_w, out_v, logger);

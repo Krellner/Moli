@@ -21,10 +21,6 @@
 
 using namespace std;
 
-//
-//
-//
-//
 template <typename I>
 inline void updateTree(                       //
     const I apex,                             //
@@ -129,7 +125,7 @@ inline void updateTree(                       //
         last_successor[out_v] = last;
 
         // remove the subtree of out_v from the thread list
-        // exepct if old_reversed_thread == in_w
+        // except if old_reversed_thread == in_w
         if (old_reversed_thread != in_w)
         {
             thread[old_reversed_thread] = after;
@@ -196,10 +192,6 @@ inline void updateTree(                       //
     for (I u = out_w; u != apex; u = parent[u]) number_successors[u] -= old_number_successors;
 }
 
-//
-//
-//
-//
 template <typename I, typename Logger>
 inline void updateTree(                        //
     const I apex,                              //

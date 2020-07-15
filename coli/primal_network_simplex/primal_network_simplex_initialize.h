@@ -18,10 +18,6 @@
 
 using namespace std;
 
-//
-//
-//
-//
 template <typename I,
           typename V>
 inline void initialize(                        //
@@ -83,7 +79,6 @@ inline void initialize(                        //
     state.resize(nEdges + nVertices, TREE);
     capacity.resize(nEdges + nVertices, numeric_limits<V>::max());
 
-    // initialize tree structure for root (vertex with index nVertices)
     parent[root] = root + 1;
     predecessor[root] = nEdges + nVertices;
     potentials[root] = 0;

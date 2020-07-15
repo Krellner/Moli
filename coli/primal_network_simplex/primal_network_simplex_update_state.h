@@ -17,10 +17,6 @@
 
 using namespace std;
 
-//
-//
-//
-//
 template <typename I,
           typename V>
 inline void updateState(    //

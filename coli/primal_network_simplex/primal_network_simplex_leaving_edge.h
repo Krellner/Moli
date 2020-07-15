@@ -17,30 +17,29 @@
 
 using namespace std;
 
-//
-//
-//
-//
 template <typename I,
           typename V>
-inline void findLeavingEdge(I v,                                 // source of entering edge
-                            I w,                                 // target of entering edge
-                            const vector<V> &capacity,           //
-                            const vector<V> &flow,               //
-                            const vector<I> &predecessor,        //
-                            const vector<I> &parent,             //
-                            const vector<I> &number_successors,  //
-                            const vector<Direction> &direction_predecessor,  //
-                            Change &change_type,                             //
-                            V &delta,                                        //
-                            I &apex,                                         //
-                            I &leaving_edge,                                 //
-                            I &length,                                       //
-                            I &in_v,                                         //
-                            I &in_w,                                         //
-                            I &out_v                                         //
+inline void findLeavingEdge(                         //
+    I v,                                             //
+    I w,                                             //
+    const vector<V> &capacity,                       //
+    const vector<V> &flow,                           //
+    const vector<I> &predecessor,                    //
+    const vector<I> &parent,                         //
+    const vector<I> &number_successors,              //
+    const vector<Direction> &direction_predecessor,  //
+    Change &change_type,                             //
+    V &delta,                                        //
+    I &apex,                                         //
+    I &leaving_edge,                                 //
+    I &length,                                       //
+    I &in_v,                                         //
+    I &in_w,                                         //
+    I &out_v                                         //
 )
 {
+    // (v,w) is the entering edge
+    
     in_v = v;
     in_w = w;
 
@@ -99,23 +98,24 @@ inline void findLeavingEdge(I v,                                 // source of en
 
 template <typename I, typename V,
           typename Logger>
-inline void findLeavingEdge(I v,                                             //
-                            I w,                                             //
-                            const vector<V> &capacity,                       //
-                            const vector<V> &flow,                           //
-                            const vector<I> &predecessor,                    //
-                            const vector<I> &parent,                         //
-                            const vector<I> &number_successors,              //
-                            const vector<Direction> &direction_predecessor,  //
-                            Change &change_type,                             //
-                            V &delta,                                        //
-                            I &apex,                                         //
-                            I &leaving_edge,                                 //
-                            I &length,                                       //
-                            I &in_v,                                         //
-                            I &in_w,                                         //
-                            I &out_v,                                        //
-                            Logger &logger                                   //
+inline void findLeavingEdge(                         //
+    I v,                                             //
+    I w,                                             //
+    const vector<V> &capacity,                       //
+    const vector<V> &flow,                           //
+    const vector<I> &predecessor,                    //
+    const vector<I> &parent,                         //
+    const vector<I> &number_successors,              //
+    const vector<Direction> &direction_predecessor,  //
+    Change &change_type,                             //
+    V &delta,                                        //
+    I &apex,                                         //
+    I &leaving_edge,                                 //
+    I &length,                                       //
+    I &in_v,                                         //
+    I &in_w,                                         //
+    I &out_v,                                        //
+    Logger &logger                                   //
 )
 {
     logger.start();

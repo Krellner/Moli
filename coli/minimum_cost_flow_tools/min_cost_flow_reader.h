@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include <vector>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -20,13 +20,13 @@ typedef std::pair<size_t, size_t> edge;
 
 template <typename I,
           typename V>
-void readMinimumCostFlowInstance(
-    char *file_name,      //
-    vector<I> &source,  //
-    vector<I> &target,  //
-    vector<V> &costs, //
-    vector<V> &ub,      //
-    vector<V> &supply   //
+void readMinimumCostFlowInstance(  //
+    char *file_name,               //
+    vector<I> &source,             //
+    vector<I> &target,             //
+    vector<V> &costs,              //
+    vector<V> &ub,                 //
+    vector<V> &supply              //
 )
 {
     ifstream graph_file;
@@ -37,9 +37,7 @@ void readMinimumCostFlowInstance(
     {
         // extract information from the line
         istringstream iss(line);
-        vector<string> tokens{
-            istream_iterator<string>{iss},
-            istream_iterator<string>{}};
+        vector<string> tokens{istream_iterator<string>{iss}, istream_iterator<string>{}};
 
         if (tokens.size() > 0)
         {
@@ -53,8 +51,7 @@ void readMinimumCostFlowInstance(
                 ub.resize(stoi(tokens[3]));
             }
 
-            if (tokens[0] == "n")
-                supply[stoi(tokens[1]) - 1] = stoi(tokens[2]);
+            if (tokens[0] == "n") supply[stoi(tokens[1]) - 1] = stoi(tokens[2]);
 
             if (tokens[0] == "a")
             {
