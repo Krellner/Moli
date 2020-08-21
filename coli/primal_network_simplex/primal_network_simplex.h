@@ -15,11 +15,11 @@
 #include <typeinfo>
 #include <vector>
 
-#include "primal_network_simplex_initialize.h"
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
 #include "primal_network_simplex_pivot.h"
 #include "primal_network_simplex_update.h"
+#include "primal_network_simplex_initialize.h"
 
 using namespace std;
 
@@ -29,7 +29,7 @@ using namespace std;
 //
 template <typename I, typename V, typename Logger,
           PivotRule Rule>
-void primalNetworkSimplex(  //
+void primal_network_simplex(  //
     vector<I>& source,      //
     vector<I>& target,      //
     vector<V>& costs,       //
@@ -42,9 +42,9 @@ void primalNetworkSimplex(  //
     const I nVertices = supply.size();
     const I nEdges = target.size();
 
-    // Primal Network Simplex Algorithm runs on auxilliary graph. The auxilliary graph has one more
-    // vertex than the given graph. Any vertex is connect to this auxilliary vertex. Those edges
-    // have high costs, so they are not part of an optimal solution. On this auxilliary graph,
+    // Primal Network Simplex Algorithm runs on auxiliary graph. The auxiliary graph has one more
+    // vertex than the given graph. Any vertex is connect to this auxiliary vertex. Those edges
+    // have high costs, so they are not part of an optimal solution. On this auxiliary graph,
     // finding an initial solution is trivial. See the initialization step for more details.
 
     supply.push_back(0);

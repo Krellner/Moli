@@ -12,8 +12,7 @@
 
 #include <chrono>
 
-struct NullLogger
-{
+struct NullLogger {
     inline constexpr void start(){};
     inline constexpr void end(){};
     inline constexpr void clear(){};
@@ -28,8 +27,7 @@ struct NullLogger
     void print(){};
 };
 
-struct PerformanceLogger
-{
+struct PerformanceLogger {
     std::chrono::time_point<std::chrono::high_resolution_clock> _start;
     std::chrono::time_point<std::chrono::high_resolution_clock> _end;
 
@@ -52,8 +50,7 @@ struct PerformanceLogger
 
     inline void increment_initialize() { time_initialize_1 += _end - _start; };
 
-    inline constexpr void clear()
-    {
+    inline constexpr void clear() {
         ctr_find_entering = 0;
         ctr_find_leaving = 0;
         ctr_update_flow = 0;
@@ -68,39 +65,32 @@ struct PerformanceLogger
         time_update_tree = std::chrono::duration<double>(0);
         time_update_potentials = std::chrono::duration<double>(0);
     };
-    inline void increment_find_entering()
-    {
+    inline void increment_find_entering() {
         time_find_entering += _end - _start;
         ctr_find_entering++;
     };
-    inline void increment_find_leaving()
-    {
+    inline void increment_find_leaving() {
         time_find_leaving += _end - _start;
         ctr_find_leaving++;
     };
-    inline void increment_update_flow()
-    {
+    inline void increment_update_flow() {
         time_update_flow += _end - _start;
         ctr_update_flow++;
     };
-    inline void increment_update_state()
-    {
+    inline void increment_update_state() {
         time_update_state += _end - _start;
         ctr_update_state++;
     };
-    inline void increment_update_tree()
-    {
+    inline void increment_update_tree() {
         time_update_tree += _end - _start;
         ctr_update_tree++;
     };
-    inline void increment_update_potentials()
-    {
+    inline void increment_update_potentials() {
         time_update_potentials += _end - _start;
         ctr_update_potentials++;
     };
 
-    void print()
-    {
+    void print() {
         cout << endl;
         auto total_time = time_initialize_1.count() + time_find_entering.count() +
                           time_find_leaving.count() + time_update_flow.count() +
