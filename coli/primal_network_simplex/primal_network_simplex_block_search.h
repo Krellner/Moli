@@ -13,10 +13,19 @@
 #include <limits>
 #include <vector>
 
+#include <cassert>
+
+// #include "tbb/parallel_for.h"
+// #include "tbb/blocked_range.h"
+// #include "tbb/tbb.h"
+
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
 
 using namespace std;
+
+// assumes a < 2*q
+template <typename V> inline V simple_modulo(const V a, const V q) { return (a < q) ? a : a - q; }
 
 template <typename I, typename V>
 inline void get_minimum_reduced_costs_in_block( //
@@ -31,6 +40,30 @@ inline void get_minimum_reduced_costs_in_block( //
     I &arg_min                                  //
 ) {
     for (I eIdx = begin; eIdx < end; ++eIdx) {
+        V reduced_costs =
+            V(state[eIdx]) * (costs[eIdx] + potentials[source[eIdx]] - potentials[target[eIdx]]);
+        if (reduced_costs < min) {
+            min = reduced_costs;
+            arg_min = eIdx;
+        }
+    }
+}
+
+template <typename I, typename V>
+inline void get_minimum_reduced_costs_in_block( //
+    const I begin,                              //
+    const I end,                                //
+    const I nEdges,                             //
+    const vector<V> &costs,                     //
+    const vector<V> &potentials,                //
+    const vector<I> &source,                    //
+    const vector<I> &target,                    //
+    const vector<State> &state,                 //
+    V &min,                                     //
+    I &arg_min                                  //
+) {
+    for (I idx = begin; idx < end; ++idx) {
+        I eIdx = simple_modulo(idx, nEdges);
         V reduced_costs =
             V(state[eIdx]) * (costs[eIdx] + potentials[source[eIdx]] - potentials[target[eIdx]]);
         if (reduced_costs < min) {
@@ -64,41 +97,30 @@ inline void block_search(        //
     // order.
 
     V min = 0;
+    I nBlocks = nEdges / block_size + 1;
 
-    I begin = start_edge;
-    I end = start_edge + block_size;
-    while (end <= nEdges) {
-        get_minimum_reduced_costs_in_block<I, V>(begin, end, costs, potentials, source, target,
-                                                 state, min, entering_edge);
+    for (I block = 0; block < nBlocks; ++block) {
+        I eIdx;
+        I begin = start_edge + block * block_size;
+        I end = start_edge + (block + 1) * block_size;
+
+        if (end < nEdges) {
+            get_minimum_reduced_costs_in_block<I, V>(begin, end, costs, potentials, source, target,
+                                                     state, min, entering_edge);
+        } else if (begin > nEdges) {
+            get_minimum_reduced_costs_in_block<I, V>(begin - nEdges, end - nEdges, costs,
+                                                     potentials, source, target, state, min,
+                                                     entering_edge);
+        } else {
+            get_minimum_reduced_costs_in_block<I, V>(begin, end, nEdges, costs, potentials, source,
+                                                     target, state, min, entering_edge);
+        }
+
         if (min < 0) {
-            start_edge = end;
+            // this is end if start_edge didn't change
+            start_edge = simple_modulo(start_edge + (block + 1) * block_size, nEdges);
             return;
         }
-        begin += block_size;
-        end += block_size;
-    }
-
-    I new_block_start = end - nEdges;
-    get_minimum_reduced_costs_in_block<I, V>(begin, nEdges, costs, potentials, source, target,
-                                             state, min, entering_edge);
-    get_minimum_reduced_costs_in_block<I, V>(0, new_block_start, costs, potentials, source, target,
-                                             state, min, entering_edge);
-    if (min < 0) {
-        start_edge = new_block_start;
-        return;
-    }
-
-    begin = new_block_start;
-    end = new_block_start + block_size;
-    while (begin < start_edge) {
-        get_minimum_reduced_costs_in_block<I, V>(begin, end, costs, potentials, source, target,
-                                                 state, min, entering_edge);
-        if (min < 0) {
-            start_edge = end;
-            return;
-        }
-        begin += block_size;
-        end += block_size;
     }
 }
 
@@ -117,8 +139,10 @@ inline void block_search(        //
     Logger &logger               //
 ) {
     logger.start();
+
     block_search<I, V>(block_size, nEdges, costs, potentials, source, target, state, entering_edge,
                        start_edge);
+
     logger.end();
     logger.increment_find_entering();
 }
