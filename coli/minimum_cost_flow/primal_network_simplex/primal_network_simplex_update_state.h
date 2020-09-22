@@ -15,6 +15,8 @@
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
 
+namespace primal_network_simplex {
+
 using namespace std;
 
 template <typename I,
@@ -49,3 +51,5 @@ inline void update_state(  //
     logger.end();
     logger.increment_update_state();
 }
+
+} // namespace primal_network_simplex

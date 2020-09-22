@@ -21,6 +21,8 @@
 #include "primal_network_simplex_update.h"
 #include "primal_network_simplex_initialize.h"
 
+namespace primal_network_simplex {
+
 using namespace std;
 
 //
@@ -29,16 +31,15 @@ using namespace std;
 //
 template <typename I, typename V, typename Logger,
           PivotRule Rule>
-void primal_network_simplex(  //
-    vector<I>& source,      //
-    vector<I>& target,      //
-    vector<V>& costs,       //
-    vector<V>& capacity,    //
-    vector<V>& supply,      //
-    vector<V>& flow,        //
-    Logger& logger          //
-)
-{
+void primal_network_simplex( //
+    vector<I> &source,       //
+    vector<I> &target,       //
+    vector<V> &costs,        //
+    vector<V> &capacity,     //
+    vector<V> &supply,       // supply is postive, demand negative
+    vector<V> &flow,         //
+    Logger &logger           //
+) {
     const I nVertices = supply.size();
     const I nEdges = target.size();
 
@@ -68,8 +69,7 @@ void primal_network_simplex(  //
     // Start_edge is the edge at which to start the pricing.
     I start_edge = 0;
 
-    while (true)
-    {
+    while (true) {
         Change change;
         V delta;
         I apex;
@@ -83,7 +83,8 @@ void primal_network_simplex(  //
             parent, predecessor, source, target, direction_predecessor, state, change, delta, apex,
             length, entering_edge, in_v, in_w, out_v, leaving_edge, start_edge, logger);
 
-        if (entering_edge == nEdges) break;
+        if (entering_edge == nEdges)
+            break;
 
         update<I, V, Logger>(change, delta, apex, entering_edge, source[entering_edge],
                              target[entering_edge], leaving_edge, length, in_v, in_w, out_v, costs,
@@ -92,3 +93,5 @@ void primal_network_simplex(  //
                              logger);
     }
 }
+
+} // namespace primal_network_simplex

@@ -10,6 +10,8 @@
 
 #pragma once
 
+namespace primal_network_simplex {
+
 // state of the edge
 // UPPER = -1, edge is not in the basis and at its upper bound
 // TREE = 0,   egde is part of the basis, i.e. in the spanning tree
@@ -26,3 +28,5 @@ enum PivotRule { BLOCK_SEARCH };
 
 //
 enum Change { BEFORE = -1, NO = 0, AFTER = 1 };
+
+} // namespace primal_network_simplex

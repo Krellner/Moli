@@ -15,12 +15,10 @@
 
 #include <cassert>
 
-// #include "tbb/parallel_for.h"
-// #include "tbb/blocked_range.h"
-// #include "tbb/tbb.h"
-
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
+
+namespace primal_network_simplex {
 
 using namespace std;
 
@@ -87,20 +85,12 @@ inline void block_search(        //
     I &start_edge                //
 ) {
     // The block search pricing procedure cyclically computes the reduced costs blockwise and
-    // selects the edge with the most reduced costs among them at each iteration. If an edge with
-    // negative reduced costs is found in a block it is selected and the pricing stops. The next
-    // round starts with the next block.
-    //
-    // The number of edges might not be devideable by the block size. So there will most likely be a
-    // block that contains the last and the first edge. We separately consider the blocks before the
-    // mentioned block, the mention block and the blocks after the mentioned block, in the stated
-    // order.
-
+    // selects the edge with the highest reduced costs among them. If the reduced costs are
+    // negative, the pricing step stops.
     V min = 0;
     I nBlocks = nEdges / block_size + 1;
 
     for (I block = 0; block < nBlocks; ++block) {
-        I eIdx;
         I begin = start_edge + block * block_size;
         I end = start_edge + (block + 1) * block_size;
 
@@ -146,3 +136,5 @@ inline void block_search(        //
     logger.end();
     logger.increment_find_entering();
 }
+
+} // namespace primal_network_simplex

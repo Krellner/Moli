@@ -17,6 +17,8 @@
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
 
+namespace primal_network_simplex {
+
 using namespace std;
 
 template <typename I, typename V, typename Logger, PivotRule Rule>
@@ -65,3 +67,5 @@ void pivot(                                          //
                                     direction_predecessor, change, delta, apex, leaving_edge,
                                     length, in_v, in_w, out_v, logger);
 }
+
+} // namespace primal_network_simplex

@@ -19,6 +19,8 @@
 #include "primal_network_simplex_update_state.h"
 #include "primal_network_simplex_update_tree.h"
 
+namespace primal_network_simplex {
+
 using namespace std;
 
 template <typename I, typename V,
@@ -69,3 +71,5 @@ void update(                                  //
                                         thread, reversed_thread, potentials, logger);
     }
 }
+
+} // namespace primal_network_simplex

@@ -12,6 +12,8 @@
 
 #include <chrono>
 
+namespace primal_network_simplex {
+
 struct NullLogger {
     inline constexpr void start(){};
     inline constexpr void end(){};
@@ -116,3 +118,5 @@ struct PerformanceLogger {
         cout << endl;
     }
 };
+
+} // namespace primal_network_simplex
