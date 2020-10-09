@@ -55,8 +55,8 @@ inline void update_potentials(        //
         I v = reversed_thread[in_v];
 
         I ctr = 0;
-        I nVertivces = potentials.size();
-        I nCtr = (nVertivces - number_successors);
+        I nVertices = potentials.size();
+        I nCtr = (nVertices - number_successors);
         while (ctr < nCtr / 2) {
             potentials[u] -= reduced_costs; // (3)
             potentials[v] -= reduced_costs; // (4)
