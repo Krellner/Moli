@@ -84,7 +84,7 @@ inline void update_tree(                     //
         I before, after = thread[last];
         I last_successor_v = last_successor[v], last_successor_parent_v;
 
-        // update parents, thread and reversed_thread (where possible) by reversing the
+        // update parents, thread and reversed_thread (when possible) by reversing the
         // parent-relation of the vertices from in_v to out_v in the current basis-tree (the one
         // that is modified) and modifing thread and reversed_thread accordingly
         thread[in_w] = in_v;
@@ -119,8 +119,7 @@ inline void update_tree(                     //
         reversed_thread[thread_continue] = last;
         last_successor[out_v] = last;
 
-        // remove the subtree of out_v from the thread list
-        // except if old_reversed_thread == in_w
+        // remove the subtree of out_v from the thread list if necessary
         if (old_reversed_thread != in_w) {
             thread[old_reversed_thread] = after;
             reversed_thread[after] = old_reversed_thread;

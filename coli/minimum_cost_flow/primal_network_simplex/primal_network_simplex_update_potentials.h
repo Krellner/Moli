@@ -35,7 +35,7 @@ inline void update_potentials(        //
 
     // We update the potentials in the smaller subtree. The subtrees are induced by the entering
     // edge. We iterate simultaneously from the first and last vertex in the tree towards each
-    // other and hope for multitasking in lines 1, 2, 3 and 4.
+    // other and hope for multitasking in lines 1 and 2 or 3 and 4.
     if (2 * number_successors < potentials.size()) {
         I u = in_v;
         I v = last_successor_in_v;

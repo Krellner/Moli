@@ -13,6 +13,8 @@
 #include <vector>
 #include <iostream>
 
+namespace domain_propagation {
+
 using namespace std;
 
 template <typename I, typename V>
@@ -20,7 +22,8 @@ inline void domain_propagation( //
     const vector<I> &source,    //
     const vector<I> &target,    //
     vector<V> &capacity,        //
-    vector<V> &supply           //
+    vector<V> &supply,          //
+    vector<V> &fixed_flow       //
 ) {
     I nVertices = supply.size();
     I nEdges = source.size();
@@ -37,79 +40,50 @@ inline void domain_propagation( //
         activity_min[w] -= capacity[eIdx];
     }
 
-    vector<V> lb(nEdges, 0);
-    vector<V> ub(capacity);
-
     bool propagation_found = true;
-
     while (propagation_found) {
+
         propagation_found = false;
         for (I eIdx = 0; eIdx < nEdges; ++eIdx) {
             I v = source[eIdx];
             I w = target[eIdx];
 
-            V lb_1 = supply[v] - activity_max[v] + ub[eIdx];
-            V lb_2 = -(supply[w] - activity_min[w]) + ub[eIdx];
+            V lb = max(supply[v] - activity_max[v] + capacity[eIdx],
+                       -(supply[w] - activity_min[w]) + capacity[eIdx]);
+            V ub = min(supply[v] - activity_min[v], -(supply[w] - activity_max[w]));
 
-            V ub_1 = supply[v] - activity_min[v] + lb[eIdx];
-            V ub_2 = -(supply[w] - activity_max[w]) + lb[eIdx];
-
-            if (ub_1 <= ub[eIdx] - 1) {
-                V delta = ub[eIdx] - ub_1;
-                ub[eIdx] -= delta;
+            if (ub <= capacity[eIdx] - 1) {
+                V delta = capacity[eIdx] - ub;
+                // update graph
+                capacity[eIdx] -= delta;
+                // update internal data
                 activity_max[v] -= delta;
                 activity_min[w] += delta;
                 propagation_found = true;
-                capacity_reduction += delta;
-            }
-            if (ub_2 <= ub[eIdx] - 1) {
-                V delta = ub[eIdx] - ub_2;
-                ub[eIdx] -= delta;
-                activity_max[v] -= delta;
-                activity_min[w] += delta;
-                propagation_found = true;
+                // needed for logging
                 capacity_reduction += delta;
             }
 
-            if (lb_1 >= lb[eIdx] + 1) {
-                V delta = lb_1 - lb[eIdx];
-                lb[eIdx] += delta;
-                activity_max[v] += delta;
-                activity_min[w] -= delta;
+            if (lb >= 1) {
+                // update graph
+                capacity[eIdx] -= lb;
+                fixed_flow[eIdx] += lb;
+                supply[v] -= lb;
+                supply[w] += lb;
+                // update internal data
                 propagation_found = true;
-                capacity_reduction += delta;
-            }
-            if (lb_2 >= lb[eIdx] + 1) {
-                V delta = lb_2 - lb[eIdx];
-                lb[eIdx] += delta;
-                activity_max[v] += delta;
-                activity_min[w] -= delta;
-                propagation_found = true;
-                capacity_reduction += delta;
+                // needed for logging
+                capacity_reduction += lb;
             }
         }
     }
 
-    // capacity = ub - lb
-    // std::transform(
-    //     being(capacity), end(capacity),
-    //     [ub_i = begin(ub), lb_i = begin(lb)] mutable(auto &) { return *ub_i++ - *lb_i++; }
-    // );
-
+    I ctr = 0;
     for (I eIdx = 0; eIdx < nEdges; ++eIdx)
-        capacity[eIdx] = ub[eIdx] - lb[eIdx];
+        if (capacity[eIdx] < 0.5)
+            ctr++;
 
-    for (I eIdx = 0; eIdx < nEdges; ++eIdx) {
-        if (lb[eIdx] > 0) {
-            supply[source[eIdx]] -= lb[eIdx];
-            supply[target[eIdx]] += lb[eIdx];
-        }
-    }
-
-    std::cout << "capacity reduction by " << capacity_reduction << std::endl;
-
-    for (I eIdx = 0; eIdx < nEdges; ++eIdx) 
-        if(capacity[eIdx] < 0.5)
-            std::cout << eIdx << " with 0 capacity " << std::endl;
-
+    std::cout << "edge reduction by " << ctr << std::endl;
 }
+
+} // namespace domain_propagation

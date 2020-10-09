@@ -43,7 +43,7 @@ void primal_network_simplex( //
     const I nVertices = supply.size();
     const I nEdges = target.size();
 
-    // Primal Network Simplex Algorithm runs on auxiliary graph. The auxiliary graph has one more
+    // Primal Network Simplex Algorithm runs on an auxiliary graph. The auxiliary graph has one more
     // vertex than the given graph. Any vertex is connect to this auxiliary vertex. Those edges
     // have high costs, so they are not part of an optimal solution. On this auxiliary graph,
     // finding an initial solution is trivial. See the initialization step for more details.
@@ -65,7 +65,7 @@ void primal_network_simplex( //
                              thread, reversed_thread, direction_predecessor, state, logger);
 
     // Block size for the pricing step, this is a good value found by experimenting.
-    const I block_size = I(sqrt(I(nEdges)));
+    const I block_size = I(sqrt(nEdges));
     // Start_edge is the edge at which to start the pricing.
     I start_edge = 0;
 

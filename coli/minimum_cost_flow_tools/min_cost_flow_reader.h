@@ -17,7 +17,7 @@
 
 using namespace std;
 
-typedef std::pair<size_t, size_t> edge;
+typedef pair<size_t, size_t> edge;
 
 template <typename I,
           typename V>
