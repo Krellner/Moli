@@ -11,6 +11,7 @@
 #pragma once
 
 #include <vector>
+#include <functional>
 
 #include "primal_network_simplex_lib.h"
 #include "primal_network_simplex_logger.h"
@@ -18,6 +19,31 @@
 namespace primal_network_simplex {
 
 using namespace std;
+
+template <typename I, typename V, typename Compare, Change CHG, Direction DIR>
+inline void update_leaving_edge( //
+    const I u,                   //
+    const I eIdx,                // predecessor of u
+    const V capacity,            // of the edge eIdx
+    const V flow,                // of the edge eIdx
+    const Direction direction,   // of the edge eIdx
+    Change &change_type,         //
+    I &leaving_edge,             //
+    I &length,                   //
+    I &out_v,                    //
+    I &ctr,                      //
+    V &delta                     //
+) {
+    V residual_capacity = (direction == DIR) ? capacity - flow : flow;
+    ctr++;
+    if (Compare{}(residual_capacity, delta)) {
+        delta = residual_capacity;
+        leaving_edge = eIdx;
+        out_v = u;
+        change_type = CHG;
+        length = ctr;
+    }
+}
 
 template <typename I,
           typename V>
@@ -55,31 +81,17 @@ inline void find_leaving_edge(                      //
     while (v != w) {
         if (num_succ_v < num_succ_w) {
             I eIdx = predecessor[v];
-            V residual_capacity =
-                (direction_predecessor[v] == DOWN) ? capacity[eIdx] - flow[eIdx] : flow[eIdx];
-            ctr1++;
-            if (residual_capacity < delta) {
-                delta = residual_capacity;
-                leaving_edge = eIdx;
-                out_v = v;
-                change_type = BEFORE;
-                length = ctr1;
-            }
+            update_leaving_edge<I, V, less<>, BEFORE, DOWN>( //
+                v, eIdx, capacity[eIdx], flow[eIdx], direction_predecessor[v], change_type,
+                leaving_edge, length, out_v, ctr1, delta);
 
             v = parent[v];
             num_succ_v = number_successors[v];
         } else {
             I eIdx = predecessor[w];
-            V residual_capacity =
-                (direction_predecessor[w] == UP) ? capacity[eIdx] - flow[eIdx] : flow[eIdx];
-            ctr2++;
-            if (residual_capacity <= delta) {
-                delta = residual_capacity;
-                leaving_edge = eIdx;
-                out_v = w;
-                change_type = AFTER;
-                length = ctr2;
-            }
+            update_leaving_edge<I, V, less_equal<>, AFTER, UP>( //
+                w, eIdx, capacity[eIdx], flow[eIdx], direction_predecessor[w], change_type,
+                leaving_edge, length, out_v, ctr2, delta);
 
             w = parent[w];
             num_succ_w = number_successors[w];

@@ -22,31 +22,32 @@ namespace primal_network_simplex {
 using namespace std;
 
 template <typename I, typename V, typename Logger, PivotRule Rule>
-void pivot(                                          //
-    const I block_size,                              //
-    const I nEdges,                                  //
-    const vector<V> &capacity,                       //
-    const vector<V> &flow,                           //
-    const vector<V> &supply, const vector<V> &costs, //
-    const vector<V> &potentials,                     //
-    const vector<I> &number_successors,              //
-    const vector<I> &parent,                         //
-    const vector<I> &predecessor,                    //
-    const vector<I> &source,                         //
-    const vector<I> &target,                         //
-    const vector<Direction> &direction_predecessor,  //
-    const vector<State> &state,                      //
-    Change &change,                                  //
-    V &delta,                                        //
-    I &apex,                                         //
-    I &length,                                       //
-    I &entering_edge,                                //
-    I &in_v,                                         //
-    I &in_w,                                         //
-    I &out_v,                                        //
-    I &leaving_edge,                                 //
-    I &start_edge,                                   //
-    Logger &logger                                   //
+void pivot(                                         //
+    const I block_size,                             //
+    const I nEdges,                                 // 
+    const vector<V> &capacity,                      //
+    const vector<V> &flow,                          //
+    const vector<V> &supply,                        //
+    const vector<V> &costs,                         //
+    const vector<V> &potentials,                    //
+    const vector<I> &number_successors,             //
+    const vector<I> &parent,                        //
+    const vector<I> &predecessor,                   //
+    const vector<I> &source,                        //
+    const vector<I> &target,                        //
+    const vector<Direction> &direction_predecessor, //
+    const vector<State> &state,                     //
+    Change &change,                                 //
+    V &delta,                                       //
+    I &apex,                                        //
+    I &length,                                      //
+    I &entering_edge,                               //
+    I &in_v,                                        //
+    I &in_w,                                        //
+    I &out_v,                                       //
+    I &leaving_edge,                                //
+    I &start_edge,                                  //
+    Logger &logger                                  //
 ) {
     // 1. Find entering edge (pricing).
     // 2. Find leaving edge and the first common predecessor of the two vertices of the entering
