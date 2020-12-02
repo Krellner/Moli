@@ -65,7 +65,9 @@ void primal_network_simplex( //
                              thread, reversed_thread, direction_predecessor, state, logger);
 
     // Block size for the pricing step, this is a good value found by experimenting.
-    const I block_size = I(sqrt(nEdges));
+    I block_size = I(sqrt(nEdges));
+    if (block_size % 2 == 1)
+        block_size--;
     // Start_edge is the edge at which to start the pricing.
     I start_edge = 0;
 

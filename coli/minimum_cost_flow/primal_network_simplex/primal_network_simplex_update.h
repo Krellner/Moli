@@ -66,9 +66,8 @@ void update(                                  //
 
         V oriented_costs = direction_predecessor[in_v] * costs[entering_idx];
         update_potentials<I, V, Logger>(last_successor[in_v], in_v, in_w, oriented_costs,
-                                        number_successors[in_v],
-
-                                        thread, reversed_thread, potentials, logger);
+                                        number_successors[in_v], thread, reversed_thread,
+                                        potentials, logger);
     }
 }
 

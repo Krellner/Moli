@@ -22,8 +22,13 @@ namespace primal_network_simplex {
 
 using namespace std;
 
-// assumes a < 2*q
+// assums a < 2*q
 template <typename V> inline V simple_modulo(const V a, const V q) { return (a < q) ? a : a - q; }
+
+template <typename I, typename V>
+inline void upper_bound_(
+
+) {}
 
 template <typename I, typename V>
 inline void get_minimum_reduced_costs_in_block( //
@@ -37,14 +42,33 @@ inline void get_minimum_reduced_costs_in_block( //
     V &min,                                     //
     I &arg_min                                  //
 ) {
-    for (I eIdx = begin; eIdx < end; ++eIdx) {
-        V reduced_costs =
+    for (I eIdx = begin; eIdx < end; eIdx += 2) {
+
+        V reduced_costs_1 =
             V(state[eIdx]) * (costs[eIdx] + potentials[source[eIdx]] - potentials[target[eIdx]]);
-        if (reduced_costs < min) {
-            min = reduced_costs;
-            arg_min = eIdx;
+        V reduced_costs_2 = V(state[eIdx + 1]) * (costs[eIdx + 1] + potentials[source[eIdx + 1]] -
+                                                  potentials[target[eIdx + 1]]);
+
+        if (reduced_costs_1 < min || reduced_costs_2 < min) {
+            if (reduced_costs_1 <= reduced_costs_2) {
+                min = reduced_costs_1;
+                arg_min = eIdx;
+            } else {
+                min = reduced_costs_2;
+                arg_min = eIdx + 1;
+            }
         }
     }
+
+    // for (I eIdx = begin; eIdx < end; ++eIdx) {
+    //     V reduced_costs =
+    //         V(state[eIdx]) * (costs[eIdx] + potentials[source[eIdx]] - potentials[target[eIdx]]);
+
+    //     if (reduced_costs < min) {
+    //         min = reduced_costs;
+    //         arg_min = eIdx;
+    //     }
+    // }
 }
 
 template <typename I, typename V>
@@ -107,7 +131,6 @@ inline void block_search(        //
         }
 
         if (min < 0) {
-            // this is end if start_edge didn't change
             start_edge = simple_modulo(start_edge + (block + 1) * block_size, nEdges);
             return;
         }

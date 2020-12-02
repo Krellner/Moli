@@ -134,3 +134,4 @@ inline void find_leaving_edge(                      //
 }
 
 } // namespace primal_network_simplex
+

@@ -24,7 +24,7 @@ using namespace std;
 template <typename I, typename V, typename Logger, PivotRule Rule>
 void pivot(                                         //
     const I block_size,                             //
-    const I nEdges,                                 // 
+    const I nEdges,                                 //
     const vector<V> &capacity,                      //
     const vector<V> &flow,                          //
     const vector<V> &supply,                        //
@@ -49,15 +49,18 @@ void pivot(                                         //
     I &start_edge,                                  //
     Logger &logger                                  //
 ) {
+    // --------------------------------------------------------------------------------------------
     // 1. Find entering edge (pricing).
-    // 2. Find leaving edge and the first common predecessor of the two vertices of the entering
-    //    edge (called apex).
 
     block_search<I, V, Logger>(block_size, nEdges, costs, potentials, source, target, state,
                                entering_edge, start_edge, logger);
 
     if (entering_edge == nEdges)
         return;
+
+    // --------------------------------------------------------------------------------------------
+    // 2. Find leaving edge and the first common predecessor of the two vertices of the entering
+    //    edge (called apex).
 
     I v = source[entering_edge], w = target[entering_edge];
     if (state[entering_edge] == UPPER)
@@ -67,6 +70,11 @@ void pivot(                                         //
     find_leaving_edge<I, V, Logger>(v, w, capacity, flow, predecessor, parent, number_successors,
                                     direction_predecessor, change, delta, apex, leaving_edge,
                                     length, in_v, in_w, out_v, logger);
+
+    // std::cout << "improvment = " << delta * costs[entering_edge] << std::endl;
+    // std::cout << "entering = (" << v << ", " << w << "), leaving (" << source[leaving_edge]
+    // << ", "
+    //           << target[leaving_edge] << ")" << std::endl;
 }
 
 } // namespace primal_network_simplex
