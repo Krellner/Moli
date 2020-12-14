@@ -10,7 +10,12 @@
 
 #pragma once
 
-template<typename I, typename V>
-struct xti{
-
+template <typename I, typename V> struct xti {
+    vector<I> &last_successor,                   //
+        vector<I> &number_successors,            //
+        vector<I> &parent,                       //
+        vector<I> &predecessor,                  //
+        vector<I> &reversed_thread,              //
+        vector<I> &thread,                       //
+        vector<Direction> &direction_predecessor //
 };

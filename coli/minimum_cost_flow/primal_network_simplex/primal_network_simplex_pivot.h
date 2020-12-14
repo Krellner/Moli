@@ -70,11 +70,6 @@ void pivot(                                         //
     find_leaving_edge<I, V, Logger>(v, w, capacity, flow, predecessor, parent, number_successors,
                                     direction_predecessor, change, delta, apex, leaving_edge,
                                     length, in_v, in_w, out_v, logger);
-
-    // std::cout << "improvment = " << delta * costs[entering_edge] << std::endl;
-    // std::cout << "entering = (" << v << ", " << w << "), leaving (" << source[leaving_edge]
-    // << ", "
-    //           << target[leaving_edge] << ")" << std::endl;
 }
 
 } // namespace primal_network_simplex
